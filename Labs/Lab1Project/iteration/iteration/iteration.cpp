@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <windows.h>
 
+
 int main()
 {
 
@@ -22,6 +23,7 @@ int main()
     */
 
 
+
     char bouncer[10] = {'O',' ',' ',' ' ,' ' ,' ' ,' ' ,' ' ,' ' ,' ' };
 
     printf("%.10s\n", bouncer);
@@ -37,7 +39,7 @@ int main()
             printf("%.10s\n", bouncer);
         }
 
-        for (int i = sizeof(bouncer); i > 0; i--) {
+        for (int i = sizeof(bouncer); --i > 0;) { // example of postincrement very cool
             Sleep(10);
             if (bouncer[i] == 'O') {
                 bouncer[i - 1] = 'O';
@@ -48,5 +50,7 @@ int main()
         }
     } while (1);
 
-
+    return 0;
 }
+
+
