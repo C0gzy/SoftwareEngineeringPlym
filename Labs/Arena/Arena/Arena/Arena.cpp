@@ -30,6 +30,7 @@ struct Enemies
 {
     string name;
     int8_t health = 0;
+    int8_t attack = 0;
     int take_damage(short dmg) {
         health -= dmg;
         return health;
@@ -38,36 +39,65 @@ struct Enemies
 };
 
 
-string EnemyArray[1][2] = {
-    {"Goblin","10"}
+string EnemyArray[1][3] = {
+    {"Goblin","10","2"}
 };
 
 struct Enemies AllEnemies[5];
 int Choice;
-short PlayerHealth = 100;
 
+struct PlayerStruct
+{
+    string name;
+    int8_t health = 100;
+    int8_t attack = 5;
+    int take_damage(short dmg) {
+        health -= dmg;
+        return health;
+    }
+};
 
+PlayerStruct Player;
 
-
-int Create_Enemies() {
+void Create_Enemies() {
 
     for (int i = 0; i < 1; i++) {
         Enemies Current;
         Current.name = EnemyArray[i][0];
         Current.health = stoi(EnemyArray[i][1]);
+        Current.attack = stoi(EnemyArray[i][2]);
 
 
         AllEnemies[i] = Current;
     }
 
-    return 0;
 }
 
 int CreateGameScene() {
     Enemies CurrentEnemyData = AllEnemies[0];
 
-    printf("---------------------\n %s \n Health: %d \n ---------------------\n %d", CurrentEnemyData.name.c_str(), CurrentEnemyData.health , PlayerHealth);
 
+    do {
+        printf("---------------------\n %s \n Health: %d \n ---------------------\n %s \n Health: %d \n ---------------------\n 1)Attack\n",
+            CurrentEnemyData.name.c_str(), CurrentEnemyData.health, Player.name.c_str(), Player.health);
+
+        cin >> Choice;
+
+        switch (Choice)
+        {
+        case 1:
+
+
+
+            CurrentEnemyData.take_damage(Player.attack);
+
+
+
+            break;
+        default:
+            break;
+        }
+    } while ((Player.health > 0) && (CurrentEnemyData.health > 0));
 
 
     return 0;
