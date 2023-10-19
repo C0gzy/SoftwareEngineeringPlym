@@ -1,10 +1,7 @@
 // Arena.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <string>
-#include <iostream>
-#include <windows.h>
-using namespace std;
+#include "Header.h"
 
 
 /*
@@ -109,7 +106,7 @@ int CreateGameScene() {
 
     do {
         system("cls");
-        printf("---------------------\n %s \n Health: %d \n ---------------------\n %s \n Health: %d \n ---------------------\n 1)Attack\n",
+        printf(" ---------------------\n %s \n Health: %d \n ---------------------\n %s \n Health: %d \n ---------------------\n 1)Attack\n",
             CurrentEnemyData.name.c_str(), CurrentEnemyData.health, Player.name.c_str(), Player.health);
 
         cin >> Choice;
@@ -121,9 +118,9 @@ int CreateGameScene() {
             
             
             system("cls");
-            cout << "----------------------------------------\n" << CurrentEnemyData.name << " attacked for " << Player.take_damage(CurrentEnemyData.attack) << " Damage!\n";
+            cout << " ----------------------------------------\n " << CurrentEnemyData.name << " attacked for " << Player.take_damage(CurrentEnemyData.attack) << " Damage!\n";
             Sleep(1000);
-            cout << "----------------------------------------\n" << Player.name << " attacked for " << CurrentEnemyData.take_damage(Player.attack) << " Damage!";
+            cout << " ----------------------------------------\n " << Player.name << " attacked for " << CurrentEnemyData.take_damage(Player.attack) << " Damage!";
             Sleep(1000);
             
 
@@ -139,6 +136,8 @@ int CreateGameScene() {
 int MainMenu() {
 
     system("cls");
+    //DisplayLogo();
+    cout << MainLogoText;
     cout << "Main Menu: \nSelect Decision \n 1)Arena \n";
     cin >> Choice;
     
