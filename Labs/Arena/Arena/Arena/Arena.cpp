@@ -17,6 +17,27 @@ uint64_t	64-bit unsigned integer
 
 
 
+struct Weapon {
+    string name;
+    int8_t maxDamage = 0;
+    int8_t minDamage = 0;
+    int8_t cost = 0;
+
+    int BuyWeapon(int& CurrentGold) {
+        if (CurrentGold - cost <= 0) {
+
+            return CurrentGold -= cost;
+        }
+
+    }
+
+    void CreateDataEntry(string _n, int _ma, int _mia, int _c) {
+        name = _n;
+        maxDamage = _ma;
+        minDamage = _mia;
+        cost = _c;
+    }
+};
 
 
 
@@ -25,29 +46,33 @@ uint64_t	64-bit unsigned integer
 struct Entity {
     string name;
     int8_t health = 0;
-    int8_t minattack = 0;
-    int8_t attack = 0;
+    //int8_t minattack = 0;
+    //int8_t attack = 0;
     int Gold = 0;
+    Weapon CurrentEquipped;
 
-    void CreateDataEntry(string _n, int _h, int _a, int _ma , int _g) {
+    void CreateDataEntry(string _n, int _h , int _g, Weapon _ce) {
         name = _n;
         health = _h;
-        attack = _a;
-        minattack = _ma;
+        //attack = _a;
+        //minattack = _ma;
         Gold = _g;
+        CurrentEquipped = _ce;
     }
 
 
-    int take_damage(short dmg) {
-        srand((unsigned) time(0));
+    int take_damage(Weapon WeaponE) {
+        srand(time(0));
 
 
-        int Attacked = minattack + (rand() % attack);
+        int Attacked = WeaponE.minDamage + (rand() % (WeaponE.maxDamage - 1));
         health -= Attacked;  //dmg;
         
         return Attacked;
     }
 };
+
+
 
 struct Enemies : Entity
 {
@@ -56,17 +81,26 @@ struct Enemies : Entity
 };
 
 
-string EnemyArray[1][5] = {
-    {"Goblin","10","1","5","10"}
+string EnemyArray[2][4] = {
+    {"Goblin","10","10","1"},
+    {"Skeleton","7","15","2"}
 };
 
-struct Enemies AllEnemies[5];
+string WeaponArray[3][4] = {
+    {"Fists","3","2","0"},
+    {"Club","6","2","15"},
+    {"Bow","7","3","10"}
+};
+
+Enemies AllEnemies[5];
+Weapon AllWeapons[5];
 int Choice;
 int8_t Result;
 
 struct PlayerStruct : Entity
 {
     
+    Weapon Inventory[10];
 };
 
 PlayerStruct Player;
@@ -77,10 +111,18 @@ void Create_Enemies() {
 
     for (int i = 0; i < 1; i++) {
         Enemies Current;
-        Current.CreateDataEntry(EnemyArray[i][0] , stoi(EnemyArray[i][1]) , stoi(EnemyArray[i][3]), stoi(EnemyArray[i][2]), stoi(EnemyArray[i][4]));
+        Current.CreateDataEntry(EnemyArray[i][0] , stoi(EnemyArray[i][1]) , stoi(EnemyArray[i][2]), AllWeapons[stoi(EnemyArray[i][3])]);
         AllEnemies[i] = Current;
     }
 
+}
+
+void Create_Weapons() {
+    for (int i = 0; i < 2; i++) {
+        Weapon Current;
+        Current.CreateDataEntry(WeaponArray[i][0], stoi(WeaponArray[i][1]), stoi(WeaponArray[i][2]), stoi(WeaponArray[i][3]));
+        AllWeapons[i] = Current;
+    }
 }
 
 
@@ -118,9 +160,9 @@ int CreateGameScene() {
             
             
             system("cls");
-            cout << " ----------------------------------------\n " << CurrentEnemyData.name << " attacked for " << Player.take_damage(CurrentEnemyData.attack) << " Damage!\n";
+            cout << " ----------------------------------------\n " << CurrentEnemyData.name << " attacked with " << CurrentEnemyData.CurrentEquipped.name << " for " << Player.take_damage(CurrentEnemyData.CurrentEquipped) << " Damage!\n";
             Sleep(1000);
-            cout << " ----------------------------------------\n " << Player.name << " attacked for " << CurrentEnemyData.take_damage(Player.attack) << " Damage!";
+            cout << " ----------------------------------------\n " << Player.name << " attacked with " << Player.CurrentEquipped.name << " for " << CurrentEnemyData.take_damage(Player.CurrentEquipped) << " Damage!";
             Sleep(1000);
             
 
@@ -133,12 +175,18 @@ int CreateGameScene() {
     return BattleEnd(CurrentEnemyData);
 }
 
+void Shop() {
+
+}
+
+
+
 int MainMenu() {
 
     system("cls");
     //DisplayLogo();
     cout << MainLogoText;
-    cout << "Main Menu: \nSelect Decision \n 1)Arena \n";
+    cout << "\nSelect Decision \n 1)Arena \n";
     cin >> Choice;
     
     switch (Choice)
@@ -159,8 +207,13 @@ int MainMenu() {
 
 int main()
 {
-    Player.CreateDataEntry("Temp", 100, 5 , 3, 0);
+
+    Create_Weapons();
     Create_Enemies();
+   
+
+    Player.CreateDataEntry("Temp", 100, 1000, AllWeapons[0]);
+
 
     MainMenu();
     return 0;
